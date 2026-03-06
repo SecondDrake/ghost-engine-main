@@ -1,0 +1,5 @@
+uber.com
+microsoft.com
+adobe.com
+intel.com
+starbucks.com

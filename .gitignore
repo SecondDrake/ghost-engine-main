@@ -1,0 +1,5 @@
+*.db
+*.log
+live_subs.txt
+__pycache__/
+.env
