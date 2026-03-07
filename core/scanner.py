@@ -8,6 +8,9 @@ import requests
 DB_PATH = "database/inventory.db"
 
 def init_db():
+    # Esta línea es la que falta para evitar el error en GitHub
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True) 
+    
     conn = sqlite3.connect(DB_PATH)
     curr = conn.cursor()
     curr.execute('''CREATE TABLE IF NOT EXISTS findings 
