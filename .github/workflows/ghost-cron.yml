@@ -2,8 +2,11 @@ name: Ghost Engine - Auto Monetizer
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Se ejecuta cada 6 horas automáticamente
-  workflow_dispatch: # Permite ejecutarlo manualmente para probar
+    - cron: '0 */6 * * *' # Corre cada 6 horas
+  workflow_dispatch: # Botón de pánico/prueba manual
+
+permissions:
+  contents: write # Vital para guardar la base de datos
 
 jobs:
   scan-and-monetize:
@@ -29,7 +32,6 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Discover Subdomains
-        # Esto genera el archivo live_subs.txt que tu scanner.py necesita
         run: $(go env GOPATH)/bin/subfinder -dL targets.txt -o live_subs.txt
 
       - name: Run Engine & Monetize
@@ -39,9 +41,9 @@ jobs:
           ADSTERRA_API_KEY: ${{ secrets.ADSTERRA_API_KEY }}
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          # 1. Generar la landing primero
+          # 1. Generar la landing con tus links de Adsterra
           python monetization/landing_gen.py
-          # 2. Correr el escáner que usa la landing generada
+          # 2. Escanear y tomar posesión automática
           python monetization/scanner.py
 
       - name: Save Results (Persistence)
@@ -49,5 +51,5 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "Ghost Engine Bot"
           git add live_subs.txt database/inventory.db
-          git commit -m "Ghost Engine: Actualización de hallazgos y base de datos [skip ci]" || echo "No hay cambios para guardar"
+          git commit -m "Ghost Engine: Actualización automática [skip ci]" || echo "Sin cambios"
           git push
