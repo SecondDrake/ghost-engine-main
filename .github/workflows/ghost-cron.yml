@@ -37,6 +37,17 @@ jobs:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_ID: ${{ secrets.TG_ID }}
           ADSTERRA_API_KEY: ${{ secrets.ADSTERRA_API_KEY }}
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          python monetization/scanner.py
+          # 1. Generar la landing primero
           python monetization/landing_gen.py
+          # 2. Correr el escáner que usa la landing generada
+          python monetization/scanner.py
+
+      - name: Save Results (Persistence)
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Ghost Engine Bot"
+          git add live_subs.txt database/inventory.db
+          git commit -m "Ghost Engine: Actualización de hallazgos y base de datos [skip ci]" || echo "No hay cambios para guardar"
+          git push
