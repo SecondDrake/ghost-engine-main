@@ -6,7 +6,7 @@ from fingerprint import check_vulnerability
 
 # La DB se guardará en la raíz/database/
 DB_PATH = os.path.join(os.getcwd(), "database", "inventory.db")
-GH_USERNAME = "TU_USUARIO_DE_GITHUB" # <--- IMPRESCINDIBLE CAMBIAR ESTO
+GH_USERNAME = "SecondDrake" # <--- IMPRESCINDIBLE CAMBIAR ESTO
 
 def init_db():
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
