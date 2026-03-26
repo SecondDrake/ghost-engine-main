@@ -13,6 +13,7 @@ permissions:
 jobs:
   surgical-monetization:
     runs-on: ubuntu-latest
+    if: always()
     # Añadimos un timeout global al job por seguridad (máximo 1 hora)
     timeout-minutes: 60 
     
@@ -45,8 +46,7 @@ jobs:
           shuf -n 500 targets.txt > active_targets.txt
           
           # Aumentamos los hilos (-t 400) para ir a máxima velocidad
-          timeout 25m $(go env GOPATH)/bin/subfinder -dL active_targets.txt -t 400 -silent -o live_subs.txt || echo "Timeout, procediendo con lo recolectado..."
-
+          timeout 10m $(go env GOPATH)/bin/subfinder -dL active_targets.txt -t 200 -silent -o live_subs.txt || echo "Timeout alcanzado, procesando hallazgos..."
       - name: Run Surgical Engine
         env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
